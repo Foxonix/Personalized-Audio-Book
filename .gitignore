@@ -41,3 +41,14 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+
+# =========================
+# Foxonix Specific Files
+# =========================
+*.asm
+*.dbg
+*.log
+*.rpt
+SIL#XO.WAV
+SN0#XO.WAV
+SN1#XO.WAV

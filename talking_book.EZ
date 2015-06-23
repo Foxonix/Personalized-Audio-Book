@@ -1,0 +1,163 @@
+; Foxonix Embedded Audio Platform
+; Developed by Metre Ideas and Design
+; www.foxonix.com
+
+; Program:	Talking_Book.EZ
+; Author:	Will Sakran
+; Created:	06.22.15
+; Modify and share this program as you wish.
+
+; Program description
+;	This program steps forward and backward through the audio of a book.
+;	When the forward button is pressed, the audio for the next page in the book will
+;	be played. When the back button is press, the previous page will be played.
+;	The buttons are interruptible, so if audio is playing and a button is
+;	pressed then the current file will stop playing and the new file will
+;	start.
+
+; Hardware INPUTS
+	; Pushbutton attached to pin P1.0 and P1.1
+
+; Hardware OUTPUTS
+	; Speaker attached to PWM output
+
+; Set the device size. A larger device number allows more audio space, but
+; will take longer to upload and program.
+[device]
+SNC21268
+
+
+; Specify the number of pins to be used as inputs
+[key]
+direct=2
+
+
+; List WAV files to be included in the program
+[files]
+cover_page_12k.wav
+page1_12k.wav
+page2_12k.wav
+page3_12k.wav
+page4_12k.wav
+page5_12k.wav
+page6_12k.wav
+page7_12k.wav
+page8_12k.wav
+page9_12k.wav
+page10_12k.wav
+page11_12k.wav
+page12_12k.wav
+page13_12k.wav
+page14_12k.wav
+page15_12k.wav
+page16_12k.wav
+
+
+; Define the various input states for the program.
+; This describes which pins will have buttons, switches, or
+; other inputs attached to them, and defines when those
+; inputs will be active and inactive.
+[input_states]
+; PIN		P1.0	P1.1
+locked_out:	x	x		; locked_out state means no buttons are active
+normal:		back 	forward		; normal state means that forward and back buttons will be active
+
+
+; Define the various output states for the program.
+; Outputs are used to drive LEDs, motor circuits, or any
+; other output device.
+[output_states]
+; No output devices are used in this program
+
+
+; Define the routines (paths) that the program will use.
+; The init path is always called first on power up and reset.
+[paths]
+init:
+	& locked_out		; Disable all inputs during init
+	& freq=12k		; Set the audio playback rate to 12 kHz
+	& ppdac			; Set the audio output to use the push-pull DAC (PWM)
+	& x0=255		; Initialize memory register x0 to 255
+	& normal		; Enable normal input state - makes forward and back buttons active
+	& end			; Stop program and put chip to sleep (low power mode)
+
+forward:
+	& x0=x0+1		; Increment x0 to point to the next page
+	& page_array
+
+back:
+	& x0?0:page_array	; Special case - if x0 is 0, don't decrement, just jump
+	& x0=x0-1		; Decrement x0 to point to the previous page
+	& page_array
+
+page_array:			; If x0=0 jump to page1. If x0=1 jump to page 2, etc...
+	& x0:[page0 page1 page2  page3  page4  page5  page6  page7
+	&     page8 page9 page10 page11 page12 page13 page14 page15 page16] x0=0 page_array
+
+page0:				; Page 0 is really the title (cover) page
+	& cover_page_12k.wav	; Play wav file
+	& end			; Stop program and put chip to sleep (low power mode)
+
+page1:
+	& page1_12k.wav
+	& end
+
+page2:
+	& page2_12k.wav
+	& end
+
+page3:
+	& page3_12k.wav
+	& end
+
+page4:
+	& page4_12k.wav
+	& end
+
+page5:
+	& page5_12k.wav
+	& end
+
+page6:
+	& page6_12k.wav
+	& end
+
+page7:
+	& page7_12k.wav
+	& end
+
+page8:
+	& page8_12k.wav
+	& end
+
+page9:
+	& page9_12k.wav
+	& end
+
+page10:
+	& page10_12k.wav
+	& end
+
+page11:
+	& page11_12k.wav
+	& end
+
+page12:
+	& page12_12k.wav
+	& end
+
+page13:
+	& page13_12k.wav
+	& end
+
+page14:
+	& page14_12k.wav
+	& end
+
+page15:
+	& page15_12k.wav
+	& end
+
+page16:
+	& page16_12k.wav
+	& end
